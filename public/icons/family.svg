@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Family">
+  <rect width="128" height="128" rx="16" fill="#14532d"/>
+  <!-- chimney on right roof slope -->
+  <rect x="76" y="34" width="8" height="11" rx="1" fill="#4ade80" opacity="0.55"/>
+  <rect x="76" y="34" width="8" height="11" rx="1" fill="none" stroke="#bbf7d0" stroke-width="2.5"/>
+  <!-- walls (narrower than roof) -->
+  <path fill="#86efac" opacity="0.45" d="M40 56h48v40H40z"/>
+  <path fill="none" stroke="#bbf7d0" stroke-width="4" stroke-linejoin="round" d="M40 56h48v40H40z"/>
+  <!-- roof overhangs past walls -->
+  <path fill="#86efac" opacity="0.45" d="M64 30 30 56h68L64 30z"/>
+  <path fill="none" stroke="#bbf7d0" stroke-width="4" stroke-linejoin="round" d="M64 30 30 56h68L64 30z"/>
+  <!-- windows with gaps -->
+  <rect x="44" y="64" width="11" height="11" rx="1" fill="#14532d" stroke="#86efac" stroke-width="2.5"/>
+  <path fill="none" stroke="#4ade80" stroke-width="1.5" d="M49.5 64v11M44 69.5h11"/>
+  <rect x="73" y="64" width="11" height="11" rx="1" fill="#14532d" stroke="#86efac" stroke-width="2.5"/>
+  <path fill="none" stroke="#4ade80" stroke-width="1.5" d="M78.5 64v11M73 69.5h11"/>
+  <!-- door -->
+  <rect x="58" y="84" width="12" height="12" rx="1" fill="#14532d" stroke="#86efac" stroke-width="2.5"/>
+</svg>

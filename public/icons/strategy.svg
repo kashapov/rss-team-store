@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Strategy">
+  <rect width="128" height="128" rx="16" fill="#1e3a5f"/>
+  <path fill="#7dd3fc" d="M32 88V40l32-16 32 16v48l-32 16-32-16z" opacity="0.35"/>
+  <path fill="none" stroke="#e2e8f0" stroke-width="4" stroke-linejoin="round" d="M32 88V40l32-16 32 16v48l-32 16-32-16z"/>
+  <path fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" d="M64 40v48M40 52l24 12 24-12M40 76l24-12 24 12"/>
+</svg>

@@ -1,7 +1,38 @@
+:root {
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --focus-ring: 2px solid currentColor;
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+  padding: var(--space-md);
+}
+
+.nav a[aria-current='page'] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.screen {
+  padding: var(--space-md);
+}
+
+.screen:focus {
+  outline: none;
+}
+
+a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
 }

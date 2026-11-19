@@ -1,6 +1,7 @@
 import { routeName } from '../../core/route';
 import { categories } from '../../data/categories';
 import { products } from '../../data/products';
+import { addProduct } from '../../state/cartStore';
 import type { Category, Product } from '../../types/product';
 import type { Screen } from '../../types/screen';
 import { categoryIconUrl } from '../../utils/assetUrl';
@@ -28,6 +29,13 @@ export const catalogScreen: Screen = (container) => {
 const productCard = (product: Product): HTMLElement => {
   const category = getCategory(product.category);
 
+  const button = element('button', {
+    className: 'catalog__add',
+    text: 'В корзину',
+    attrs: { type: 'button' },
+  });
+  button.addEventListener('click', () => addProduct(product.id));
+
   return element('li', { className: 'catalog__card' }, [
     element('div', { className: 'catalog__top' }, [
       element('img', {
@@ -47,11 +55,7 @@ const productCard = (product: Product): HTMLElement => {
         className: 'catalog__price',
         text: `${product.price} грн`,
       }),
-      element('button', {
-        className: 'catalog__add',
-        text: 'В корзину',
-        attrs: { type: 'button' },
-      }),
+      button,
     ]),
   ]);
 };

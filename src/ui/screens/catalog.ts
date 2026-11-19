@@ -1,3 +1,4 @@
+import { formatPrice } from '../../core/formatPrice';
 import { routeName } from '../../core/route';
 import { categories } from '../../data/categories';
 import { products } from '../../data/products';
@@ -6,6 +7,10 @@ import type { Category, Product } from '../../types/product';
 import type { Screen } from '../../types/screen';
 import { categoryIconUrl } from '../../utils/assetUrl';
 import { element } from '../dom';
+
+const ADD_LABEL = 'В корзину';
+const ADDED_LABEL = 'Добавлено';
+const ADDED_MS = 1000;
 
 const categoryById = new Map(categories.map((category) => [category.id, category]));
 
@@ -31,10 +36,22 @@ const productCard = (product: Product): HTMLElement => {
 
   const button = element('button', {
     className: 'catalog__add',
-    text: 'В корзину',
+    text: ADD_LABEL,
     attrs: { type: 'button' },
   });
-  button.addEventListener('click', () => addProduct(product.id));
+
+  let resetTimer: ReturnType<typeof setTimeout> | undefined;
+
+  button.addEventListener('click', () => {
+    addProduct(product.id);
+    button.textContent = ADDED_LABEL;
+    button.disabled = true;
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => {
+      button.textContent = ADD_LABEL;
+      button.disabled = false;
+    }, ADDED_MS);
+  });
 
   return element('li', { className: 'catalog__card' }, [
     element('div', { className: 'catalog__top' }, [
@@ -42,7 +59,7 @@ const productCard = (product: Product): HTMLElement => {
         className: 'catalog__image',
         attrs: {
           src: categoryIconUrl(category.image),
-          alt: category.name,
+          alt: '',
         },
       }),
       element('div', { className: 'catalog__meta' }, [
@@ -53,7 +70,7 @@ const productCard = (product: Product): HTMLElement => {
     element('div', { className: 'catalog__footer' }, [
       element('p', {
         className: 'catalog__price',
-        text: `${product.price} грн`,
+        text: formatPrice(product.price),
       }),
       button,
     ]),

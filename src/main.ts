@@ -7,6 +7,8 @@ import { startRouter } from './ui/router';
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('#app not found');
 
+app.className = 'app';
+
 const nav = createNav();
 const main = element('main', { className: 'screen', attrs: { tabindex: '-1' } });
 app.append(nav, main);

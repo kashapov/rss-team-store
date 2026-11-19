@@ -2,6 +2,11 @@
   --space-sm: 0.5rem;
   --space-md: 1rem;
   --focus-ring: 2px solid currentColor;
+  --muted: #5a6b62;
+  --line: color-mix(in srgb, #15201b 12%, transparent);
+  --accent: #0f6b56;
+  --accent-hover: #0b5544;
+  --radius: 0.75rem;
 }
 
 *,
@@ -32,7 +37,110 @@
   outline: none;
 }
 
-a:focus-visible {
+a:focus-visible,
+button:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 2px;
+}
+
+.catalog {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
+  gap: var(--space-md);
+  list-style: none;
+  margin-top: var(--space-md);
+}
+
+.catalog__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, #ffffff 70%, transparent);
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.catalog__card:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  transform: translateY(-1px);
+}
+
+.catalog__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.catalog__image {
+  flex: 0 0 auto;
+  display: block;
+  width: 3.25rem;
+  height: 3.25rem;
+  object-fit: contain;
+}
+
+.catalog__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.catalog__name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.catalog__category {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.catalog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.catalog__price {
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.catalog__add {
+  flex: 0 0 auto;
+  padding: 0.5rem 0.85rem;
+  border: none;
+  border-radius: calc(var(--radius) - 0.2rem);
+  background: var(--accent);
+  color: #f4faf7;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background-color 0.15s ease;
+}
+
+.catalog__add:hover {
+  background: var(--accent-hover);
+}
+
+@media (max-width: 40rem) {
+  .catalog {
+    grid-template-columns: 1fr;
+  }
 }

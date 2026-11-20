@@ -5,7 +5,7 @@
 - **Участники:** [@kashapov](https://github.com/kashapov), [@KsArt-IT](https://github.com/KsArt-IT)
 - **Репозиторий:** https://github.com/kashapov/rss-team-store
 - **Доска задач:** https://github.com/users/kashapov/projects/3
-- **Деплой:** GitHub Pages — ссылка появится после задачи #7
+- **Деплой:** https://kashapov.github.io/rss-team-store/
 
 Каталог товаров, корзина с итогом, фильтры. Данные хранятся в репозитории (без бэкенда и внешнего API). Изображения товаров — без чужих обложек игр; при необходимости используются простые SVG-иконки по категориям.
 
@@ -82,4 +82,4 @@ git push -u origin feat/short-name
 
 ## Деплой
 
-Публикация на **GitHub Pages** (задача #7). После появления сайта ссылка будет в списке в начале README.
+Публикация через GitHub Actions (`.github/workflows/deploy.yml`) при push в `main`. В Settings → Pages источник — **GitHub Actions**. Ссылка — в списке в начале README.

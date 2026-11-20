@@ -135,7 +135,10 @@ const cartLine = (line: CartLine, onChange: OnChange): HTMLElement => {
   const { product, qty } = line;
 
   return element('li', { className: 'cart__line' }, [
-    element('span', { className: 'cart__name', text: product.name }),
+    element('div', { className: 'cart__info' }, [
+      element('span', { className: 'cart__name', text: product.name }),
+      element('span', { className: 'cart__price', text: `${formatPrice(product.price)} / шт.` }),
+    ]),
     element('div', { className: 'cart__qty' }, [
       lineButton('cart__btn', '−', `Уменьшить количество: ${product.name}`, qty <= MIN_QTY, () =>
         onChange(product.id, 'dec'),

@@ -130,10 +130,19 @@ body {
   gap: var(--space-md);
 }
 
-.cart__name {
+.cart__info {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 10rem;
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.cart__price {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .cart__total {
@@ -348,7 +357,7 @@ button:focus-visible {
     gap: 0.5rem 0.25rem;
   }
 
-  .cart__name {
+  .cart__info {
     flex-basis: 100%;
   }
 

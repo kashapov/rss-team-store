@@ -1,4 +1,4 @@
-import { addToCart, decreaseQty, increaseQty } from '../core/cart';
+import { addToCart, decreaseQty, increaseQty, removeFromCart } from '../core/cart';
 import type { CartItem } from '../types/cart';
 
 // Единственное место, где живёт корзина. Экраны читают её при отрисовке:
@@ -17,4 +17,8 @@ export const increaseProductQty = (productId: number): void => {
 
 export const decreaseProductQty = (productId: number): void => {
   items = decreaseQty(items, productId);
+};
+
+export const removeProduct = (productId: number): void => {
+  items = removeFromCart(items, productId);
 };

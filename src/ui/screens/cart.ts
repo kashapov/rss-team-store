@@ -3,16 +3,22 @@ import { lineTotal, toCartLines } from '../../core/cartLines';
 import { formatPrice } from '../../core/formatPrice';
 import { routeName } from '../../core/route';
 import { getProductById } from '../../data/productLookup';
-import { decreaseProductQty, getCart, increaseProductQty } from '../../state/cartStore';
+import {
+  decreaseProductQty,
+  getCart,
+  increaseProductQty,
+  removeProduct,
+} from '../../state/cartStore';
 import type { CartLine } from '../../types/cart';
 import type { Screen } from '../../types/screen';
 import { element } from '../dom';
 
-type LineAction = 'dec' | 'inc';
+type LineAction = 'dec' | 'inc' | 'remove';
 
 const APPLY: Record<LineAction, (productId: number) => void> = {
   dec: decreaseProductQty,
   inc: increaseProductQty,
+  remove: removeProduct,
 };
 
 type OnChange = (productId: number, action: LineAction) => void;
@@ -57,6 +63,9 @@ const cartLine = (line: CartLine, onChange: OnChange): HTMLElement => {
       ),
     ]),
     element('span', { className: 'cart__total', text: formatPrice(lineTotal(line)) }),
+    lineButton('cart__remove', '×', `Удалить из корзины: ${product.name}`, false, () =>
+      onChange(product.id, 'remove'),
+    ),
   ]);
 };
 

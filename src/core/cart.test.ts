@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CartItem } from '../types/cart';
-import { MIN_QTY, addToCart, decreaseQty, increaseQty } from './cart';
+import { MIN_QTY, addToCart, decreaseQty, increaseQty, removeFromCart } from './cart';
 
 describe('addToCart', () => {
   it('adds a new line with qty 1 to an empty cart', () => {
@@ -94,4 +94,40 @@ describe('increaseQty / decreaseQty', () => {
       expect(next[1]).toBe(frozen[1]);
     },
   );
+});
+
+describe('removeFromCart', () => {
+  const items: readonly CartItem[] = [
+    { productId: 1, qty: 3 },
+    { productId: 2, qty: 1 },
+    { productId: 3, qty: 2 },
+  ];
+
+  it('removes the whole line regardless of qty', () => {
+    expect(removeFromCart(items, 1)).toEqual([
+      { productId: 2, qty: 1 },
+      { productId: 3, qty: 2 },
+    ]);
+  });
+
+  it('keeps the order of the remaining lines', () => {
+    expect(removeFromCart(items, 2).map((item) => item.productId)).toEqual([1, 3]);
+  });
+
+  it('returns an empty cart after removing the last line', () => {
+    expect(removeFromCart([{ productId: 1, qty: 1 }], 1)).toEqual([]);
+  });
+
+  it('leaves the cart unchanged for an unknown id', () => {
+    expect(removeFromCart(items, 999)).toEqual(items);
+  });
+
+  it('does not mutate the input', () => {
+    const frozen = Object.freeze([Object.freeze({ productId: 1, qty: 1 })]);
+    const snapshot = structuredClone(frozen);
+
+    removeFromCart(frozen, 1);
+
+    expect(frozen).toEqual(snapshot);
+  });
 });

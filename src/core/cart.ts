@@ -22,3 +22,7 @@ export function addToCart(items: readonly CartItem[], productId: number): CartIt
   }
   return shiftQty(items, productId, 1);
 }
+
+/** Удаляет строку товара целиком. */
+export const removeFromCart = (items: readonly CartItem[], productId: number): CartItem[] =>
+  items.filter((item) => item.productId !== productId);

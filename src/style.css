@@ -138,6 +138,10 @@ body {
   overflow-wrap: anywhere;
 }
 
+.cart__name {
+  font-weight: 600;
+}
+
 .cart__price {
   color: var(--muted);
   font-size: 0.875rem;

@@ -1,5 +1,6 @@
 import { MIN_QTY } from '../../core/cart';
 import { lineTotal, toCartLines } from '../../core/cartLines';
+import { calculateCartTotals } from '../../core/cartTotals';
 import { formatPrice } from '../../core/formatPrice';
 import { routeName } from '../../core/route';
 import { getProductById } from '../../data/productLookup';
@@ -9,7 +10,7 @@ import {
   increaseProductQty,
   removeProduct,
 } from '../../state/cartStore';
-import type { CartLine } from '../../types/cart';
+import type { CartLine, CartTotals } from '../../types/cart';
 import type { Screen } from '../../types/screen';
 import { element } from '../dom';
 
@@ -42,11 +43,18 @@ export const cartScreen: Screen = (container) => {
             {},
             lines.map((line) => cartLine(line, onChange)),
           ),
+      cartSummary(calculateCartTotals(lines)),
     );
   };
 
   render();
 };
+
+const cartSummary = ({ total }: CartTotals): HTMLElement =>
+  element('div', { className: 'cart__summary' }, [
+    element('span', { text: 'Итого' }),
+    element('output', { className: 'cart__sum', text: formatPrice(total) }),
+  ]);
 
 const cartLine = (line: CartLine, onChange: OnChange): HTMLElement => {
   const { product, qty } = line;

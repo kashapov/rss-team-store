@@ -191,6 +191,21 @@ body {
   background: color-mix(in srgb, var(--ink) 8%, transparent);
 }
 
+.cart__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+  padding: 0.75rem 1rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.cart__sum {
+  font-variant-numeric: tabular-nums;
+}
+
 .cart__btn:disabled {
   cursor: default;
   opacity: 0.45;

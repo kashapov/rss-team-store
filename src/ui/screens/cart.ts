@@ -1,3 +1,4 @@
+import { toCartLines } from '../../core/cartLines';
 import { routeName } from '../../core/route';
 import { getProductById } from '../../data/productLookup';
 import { getCart } from '../../state/cartStore';
@@ -6,11 +7,7 @@ import type { Screen } from '../../types/screen';
 import { element } from '../dom';
 
 export const cartScreen: Screen = (container) => {
-  // Строка с неизвестным id не участвует ни в списке, ни (позже) в сумме.
-  const lines = getCart().flatMap((item) => {
-    const product = getProductById(item.productId);
-    return product ? [{ product, qty: item.qty }] : [];
-  });
+  const lines = toCartLines(getCart(), getProductById);
 
   container.append(
     element('h1', { text: routeName('cart') }),

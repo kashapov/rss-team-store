@@ -1,7 +1,4 @@
-export type CartItem = {
-  productId: number;
-  qty: number;
-};
+import type { CartItem } from '../types/cart';
 
 /** Добавляет товар в корзину: повторное добавление увеличивает qty, а не дублирует строку. */
 export function addToCart(items: readonly CartItem[], productId: number): CartItem[] {

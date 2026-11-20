@@ -1,5 +1,5 @@
-import type { CartItem } from '../core/cart';
 import { addToCart } from '../core/cart';
+import type { CartItem } from '../types/cart';
 
 // Единственное место, где живёт корзина. Экраны читают её при отрисовке:
 // роутер перерисовывает экран при каждом переходе, подписки не нужны.

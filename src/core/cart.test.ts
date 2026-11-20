@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { CartItem } from './cart';
+import type { CartItem } from '../types/cart';
 import { addToCart } from './cart';
 
 describe('addToCart', () => {

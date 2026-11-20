@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CartItem } from '../types/cart';
-import { addToCart } from './cart';
+import { MIN_QTY, addToCart, decreaseQty, increaseQty } from './cart';
 
 describe('addToCart', () => {
   it('adds a new line with qty 1 to an empty cart', () => {
@@ -45,4 +45,53 @@ describe('addToCart', () => {
     expect(next).not.toBe(items);
     expect(next[0]).not.toBe(items[0]);
   });
+});
+
+describe('increaseQty / decreaseQty', () => {
+  const items: readonly CartItem[] = [
+    { productId: 1, qty: 3 },
+    { productId: 2, qty: 1 },
+  ];
+
+  it('increaseQty adds 1 to the matching line only', () => {
+    expect(increaseQty(items, 1)).toEqual([
+      { productId: 1, qty: 4 },
+      { productId: 2, qty: 1 },
+    ]);
+  });
+
+  it('decreaseQty subtracts 1 from the matching line only', () => {
+    expect(decreaseQty(items, 1)).toEqual([
+      { productId: 1, qty: 2 },
+      { productId: 2, qty: 1 },
+    ]);
+  });
+
+  it('decreaseQty does not go below the minimum qty', () => {
+    expect(decreaseQty(items, 2)).toEqual(items);
+    expect(decreaseQty([{ productId: 1, qty: MIN_QTY }], 1)).toEqual([
+      { productId: 1, qty: MIN_QTY },
+    ]);
+  });
+
+  it.each([increaseQty, decreaseQty])('leaves the cart unchanged for an unknown id', (change) => {
+    expect(change(items, 999)).toEqual(items);
+  });
+
+  it.each([increaseQty, decreaseQty])(
+    'does not mutate the input or touch other lines',
+    (change) => {
+      const frozen = Object.freeze([
+        Object.freeze({ productId: 1, qty: 3 }),
+        Object.freeze({ productId: 2, qty: 2 }),
+      ]);
+      const snapshot = structuredClone(frozen);
+
+      const next = change(frozen, 1);
+
+      expect(frozen).toEqual(snapshot);
+      expect(next).not.toBe(frozen);
+      expect(next[1]).toBe(frozen[1]);
+    },
+  );
 });

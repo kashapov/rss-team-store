@@ -1,4 +1,4 @@
-import { addToCart } from '../core/cart';
+import { addToCart, decreaseQty, increaseQty } from '../core/cart';
 import type { CartItem } from '../types/cart';
 
 // Единственное место, где живёт корзина. Экраны читают её при отрисовке:
@@ -9,4 +9,12 @@ export const getCart = (): readonly CartItem[] => items;
 
 export const addProduct = (productId: number): void => {
   items = addToCart(items, productId);
+};
+
+export const increaseProductQty = (productId: number): void => {
+  items = increaseQty(items, productId);
+};
+
+export const decreaseProductQty = (productId: number): void => {
+  items = decreaseQty(items, productId);
 };

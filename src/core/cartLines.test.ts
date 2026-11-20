@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { CartItem } from '../types/cart';
 import type { Product } from '../types/product';
-import { toCartLines } from './cartLines';
+import { lineTotal, toCartLines } from './cartLines';
 
 describe('toCartLines', () => {
   const product = (id: number): Product => ({ id, name: `p${id}`, category: 'family', price: 100 });
@@ -34,5 +34,17 @@ describe('toCartLines', () => {
 
   it('returns an empty list when every id is unknown', () => {
     expect(toCartLines([{ productId: 999, qty: 1 }], getProduct)).toEqual([]);
+  });
+});
+
+describe('lineTotal', () => {
+  const product: Product = { id: 1, name: 'p1', category: 'family', price: 995 };
+
+  it('multiplies price by qty', () => {
+    expect(lineTotal({ product, qty: 3 })).toBe(2985);
+  });
+
+  it('equals the price for qty 1', () => {
+    expect(lineTotal({ product, qty: 1 })).toBe(995);
   });
 });

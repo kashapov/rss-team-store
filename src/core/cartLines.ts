@@ -15,3 +15,6 @@ export function toCartLines(
     return product ? [{ product, qty }] : [];
   });
 }
+
+/** Сумма строки: цена товара × количество. */
+export const lineTotal = ({ product, qty }: CartLine): number => product.price * qty;

@@ -1,25 +1,78 @@
-import { toCartLines } from '../../core/cartLines';
+import { MIN_QTY } from '../../core/cart';
+import { lineTotal, toCartLines } from '../../core/cartLines';
+import { formatPrice } from '../../core/formatPrice';
 import { routeName } from '../../core/route';
 import { getProductById } from '../../data/productLookup';
-import { getCart } from '../../state/cartStore';
-import type { Product } from '../../types/product';
+import { decreaseProductQty, getCart, increaseProductQty } from '../../state/cartStore';
+import type { CartLine } from '../../types/cart';
 import type { Screen } from '../../types/screen';
 import { element } from '../dom';
 
-export const cartScreen: Screen = (container) => {
-  const lines = toCartLines(getCart(), getProductById);
+type LineAction = 'dec' | 'inc';
 
-  container.append(
-    element('h1', { text: routeName('cart') }),
-    lines.length === 0
-      ? element('p', { text: 'Корзина пуста.' })
-      : element(
-          'ul',
-          {},
-          lines.map(({ product, qty }) => cartLine(product, qty)),
-        ),
-  );
+const APPLY: Record<LineAction, (productId: number) => void> = {
+  dec: decreaseProductQty,
+  inc: increaseProductQty,
 };
 
-const cartLine = (product: Product, qty: number): HTMLElement =>
-  element('li', { text: `${product.name} × ${qty}` });
+type OnChange = (productId: number, action: LineAction) => void;
+
+export const cartScreen: Screen = (container) => {
+  // Роутер не перерисовывает экран при клике внутри него, поэтому перерисовываем сами.
+  const render = (): void => {
+    const lines = toCartLines(getCart(), getProductById);
+
+    const onChange: OnChange = (productId, action) => {
+      APPLY[action](productId);
+      render();
+    };
+
+    container.replaceChildren(
+      element('h1', { text: routeName('cart') }),
+      lines.length === 0
+        ? element('p', { text: 'Корзина пуста.' })
+        : element(
+            'ul',
+            {},
+            lines.map((line) => cartLine(line, onChange)),
+          ),
+    );
+  };
+
+  render();
+};
+
+const cartLine = (line: CartLine, onChange: OnChange): HTMLElement => {
+  const { product, qty } = line;
+
+  return element('li', { className: 'cart__line' }, [
+    element('span', { className: 'cart__name', text: product.name }),
+    element('div', { className: 'cart__qty' }, [
+      lineButton('cart__btn', '−', `Уменьшить количество: ${product.name}`, qty <= MIN_QTY, () =>
+        onChange(product.id, 'dec'),
+      ),
+      element('output', { className: 'cart__count', text: String(qty) }),
+      lineButton('cart__btn', '+', `Увеличить количество: ${product.name}`, false, () =>
+        onChange(product.id, 'inc'),
+      ),
+    ]),
+    element('span', { className: 'cart__total', text: formatPrice(lineTotal(line)) }),
+  ]);
+};
+
+const lineButton = (
+  className: string,
+  text: string,
+  label: string,
+  disabled: boolean,
+  onClick: () => void,
+): HTMLButtonElement => {
+  const button = element('button', {
+    className,
+    text,
+    attrs: { type: 'button', 'aria-label': label },
+  });
+  button.disabled = disabled;
+  button.addEventListener('click', onClick);
+  return button;
+};

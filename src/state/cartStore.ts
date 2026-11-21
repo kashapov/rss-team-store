@@ -35,3 +35,21 @@ export const applyPromoCode = (code: string): boolean => {
   promoCode = isKnown ? normalizePromoCode(code) : undefined;
   return isKnown;
 };
+
+/** Явная отмена применённого кода. */
+export const clearPromoCode = (): void => {
+  promoCode = undefined;
+};
+
+/** Введённый код совпадает с уже применённым (с учётом нормализации). */
+export const isPromoCodeApplied = (code: string): boolean =>
+  promoCode !== undefined && normalizePromoCode(code) === promoCode;
+
+export type AppliedPromo = { code: string; percent: number };
+
+/** Применённый код с данными из справочника или undefined, если кода нет. */
+export const getAppliedPromo = (): AppliedPromo | undefined => {
+  if (promoCode === undefined) return undefined;
+  const promo = findPromo(promoCode);
+  return promo && { code: promoCode, percent: promo.percent };
+};

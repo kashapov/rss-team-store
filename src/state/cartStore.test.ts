@@ -38,3 +38,55 @@ describe('promo code state', () => {
     expect(store.getPromoCode()).toBeUndefined();
   });
 });
+
+describe('clearPromoCode', () => {
+  it('removes the applied code', () => {
+    store.applyPromoCode('SALE10');
+    store.clearPromoCode();
+    expect(store.getPromoCode()).toBeUndefined();
+  });
+
+  it('is safe to call without an applied code', () => {
+    store.clearPromoCode();
+    expect(store.getPromoCode()).toBeUndefined();
+  });
+});
+
+describe('isPromoCodeApplied', () => {
+  it('is false when no code is applied', () => {
+    expect(store.isPromoCodeApplied('SALE10')).toBe(false);
+  });
+
+  it.each(['SALE10', ' sale10 ', 'Sale10'])('matches the applied code written as %j', (code) => {
+    store.applyPromoCode('SALE10');
+    expect(store.isPromoCodeApplied(code)).toBe(true);
+  });
+
+  it('is false for a different code', () => {
+    store.applyPromoCode('SALE10');
+    expect(store.isPromoCodeApplied('SALE20')).toBe(false);
+  });
+
+  it('is false after the code is cleared', () => {
+    store.applyPromoCode('SALE10');
+    store.clearPromoCode();
+    expect(store.isPromoCodeApplied('SALE10')).toBe(false);
+  });
+});
+
+describe('getAppliedPromo', () => {
+  it('is undefined when no code is applied', () => {
+    expect(store.getAppliedPromo()).toBeUndefined();
+  });
+
+  it('returns the normalized code with its percent from the table', () => {
+    store.applyPromoCode(' sale10 ');
+    expect(store.getAppliedPromo()).toEqual({ code: 'SALE10', percent: 10 });
+  });
+
+  it('is undefined after the code is cleared', () => {
+    store.applyPromoCode('SALE10');
+    store.clearPromoCode();
+    expect(store.getAppliedPromo()).toBeUndefined();
+  });
+});

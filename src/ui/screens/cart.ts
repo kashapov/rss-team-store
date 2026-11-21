@@ -5,11 +5,15 @@ import { formatPrice } from '../../core/formatPrice';
 import { routeName } from '../../core/route';
 import { getProductById } from '../../data/productLookup';
 import {
+  type AppliedPromo,
   applyPromoCode,
+  clearPromoCode,
   decreaseProductQty,
+  getAppliedPromo,
   getCart,
   getPromoCode,
   increaseProductQty,
+  isPromoCodeApplied,
   removeProduct,
 } from '../../state/cartStore';
 import type { CartLine, CartTotals } from '../../types/cart';
@@ -37,6 +41,7 @@ export const cartScreen: Screen = (container) => {
   // Роутер не перерисовывает экран при клике внутри него, поэтому перерисовываем сами.
   const render = (): void => {
     const lines = toCartLines(getCart(), getProductById);
+    const applied = getAppliedPromo();
 
     const onChange: OnChange = (productId, action) => {
       APPLY[action](productId);
@@ -48,12 +53,21 @@ export const cartScreen: Screen = (container) => {
       if (code.trim() === '') {
         draft = '';
         message = { text: 'Введите промокод.', isError: true };
+      } else if (applied && isPromoCodeApplied(code)) {
+        message = { text: `Промокод ${applied.code} уже применён.`, isError: false };
+        draft = '';
       } else if (applyPromoCode(code)) {
         message = { text: `Промокод ${getPromoCode()} применён.`, isError: false };
         draft = '';
       } else {
         message = { text: 'Промокод не найден - скидка не применяется', isError: true };
       }
+      render();
+    };
+
+    const onClearPromo = (code: string): void => {
+      message = { text: `Промокод ${code} отменён.`, isError: false };
+      clearPromoCode();
       render();
     };
 
@@ -67,7 +81,8 @@ export const cartScreen: Screen = (container) => {
             lines.map((line) => cartLine(line, onChange)),
           ),
       promoForm(draft, message, onApplyPromo, (value) => (draft = value)),
-      cartSummary(calculateCartTotals(lines, getPromoCode())),
+      ...(applied ? [appliedPromo(applied, onClearPromo)] : []),
+      cartSummary(calculateCartTotals(lines, applied?.code), applied?.percent),
     );
   };
 
@@ -114,12 +129,22 @@ const promoForm = (
   return form;
 };
 
-const cartSummary = ({ subtotal, discount, total }: CartTotals): HTMLElement =>
+const appliedPromo = ({ code }: AppliedPromo, onClear: (code: string) => void): HTMLElement =>
+  element('p', { className: 'cart__promo-applied' }, [
+    element('span', { text: 'Применён: ' }),
+    element('strong', { text: code }),
+    lineButton('cart__promo-clear', '×', `Отменить промокод ${code}`, false, () => onClear(code)),
+  ]);
+
+const cartSummary = (
+  { subtotal, discount, total }: CartTotals,
+  percent: number | undefined,
+): HTMLElement =>
   element('div', { className: 'cart__summary' }, [
     ...(discount > 0
       ? [
           summaryRow('Сумма', formatPrice(subtotal)),
-          summaryRow('Скидка', `−${formatPrice(discount)}`),
+          summaryRow(percent ? `Скидка ${percent}%` : 'Скидка', `−${formatPrice(discount)}`),
         ]
       : []),
     summaryRow('Итого', formatPrice(total), true),

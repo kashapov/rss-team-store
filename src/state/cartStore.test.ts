@@ -9,6 +9,72 @@ beforeEach(async () => {
   store = await import('./cartStore');
 });
 
+describe('subscribe', () => {
+  type Mutator = 'addProduct' | 'increaseProductQty' | 'decreaseProductQty' | 'removeProduct';
+
+  // Каждая функция, меняющая корзину. Новая функция изменения — новая строка здесь.
+  it.each<Mutator>(['addProduct', 'increaseProductQty', 'decreaseProductQty', 'removeProduct'])(
+    '%s notifies the listener with the current items',
+    (mutator) => {
+      store.addProduct(1);
+      store.addProduct(1);
+      const listener = vi.fn();
+      store.subscribe(listener);
+
+      store[mutator](1);
+
+      expect(listener).toHaveBeenCalledTimes(1);
+      expect(listener).toHaveBeenCalledWith(store.getCart());
+    },
+  );
+
+  it('passes the updated items', () => {
+    const listener = vi.fn();
+    store.subscribe(listener);
+
+    store.addProduct(1);
+
+    expect(listener).toHaveBeenLastCalledWith([{ productId: 1, qty: 1 }]);
+  });
+
+  it('is not called on subscribe', () => {
+    const listener = vi.fn();
+    store.subscribe(listener);
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it('stops calling the listener after unsubscribe', () => {
+    const listener = vi.fn();
+    const unsubscribe = store.subscribe(listener);
+
+    unsubscribe();
+    store.addProduct(1);
+
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it('calls every subscriber', () => {
+    const first = vi.fn();
+    const second = vi.fn();
+    store.subscribe(first);
+    store.subscribe(second);
+
+    store.addProduct(1);
+
+    expect(first).toHaveBeenCalledTimes(1);
+    expect(second).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not notify on promo code changes', () => {
+    const listener = vi.fn();
+    store.subscribe(listener);
+
+    store.applyPromoCode('SALE10');
+
+    expect(listener).not.toHaveBeenCalled();
+  });
+});
+
 describe('promo code state', () => {
   it('has no code initially', () => {
     expect(store.getPromoCode()).toBeUndefined();

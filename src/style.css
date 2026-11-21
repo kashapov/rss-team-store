@@ -128,7 +128,7 @@ body {
   max-width: 36rem;
 }
 
-.screen > ul:not(.catalog) {
+.screen > ul:not(.catalog):not(.about__list) {
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -136,12 +136,50 @@ body {
   margin-top: var(--space-sm);
 }
 
-.screen > ul:not(.catalog) li {
+.screen > ul:not(.catalog):not(.about__list) li {
   padding: 0.75rem 1rem;
   border: 1px solid var(--line);
   border-radius: calc(var(--radius) - 0.15rem);
   background: color-mix(in srgb, #ffffff 55%, transparent);
   font-weight: 500;
+}
+
+.about__intro {
+  margin-bottom: var(--space-sm);
+}
+
+.about__intro a {
+  color: var(--accent);
+  text-underline-offset: 0.12em;
+}
+
+.about__name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: var(--space-md);
+  margin-bottom: 0.35rem;
+}
+
+.about__name a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.about__name a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.about__list {
+  list-style: disc;
+  padding-left: 1.25rem;
+  max-width: 36rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
 }
 
 .cart__line {

@@ -75,6 +75,22 @@ describe('subscribe', () => {
   });
 });
 
+describe('replaceCart', () => {
+  it('replaces the whole cart', () => {
+    store.addProduct(1);
+    store.replaceCart([{ productId: 2, qty: 3 }]);
+    expect(store.getCart()).toEqual([{ productId: 2, qty: 3 }]);
+  });
+
+  it('notifies subscribers with the new items', () => {
+    const listener = vi.fn();
+    store.subscribe(listener);
+    store.replaceCart([{ productId: 2, qty: 3 }]);
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(listener).toHaveBeenCalledWith([{ productId: 2, qty: 3 }]);
+  });
+});
+
 describe('promo code state', () => {
   it('has no code initially', () => {
     expect(store.getPromoCode()).toBeUndefined();

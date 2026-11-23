@@ -27,6 +27,9 @@ const setItems = (next: readonly CartItem[]): void => {
   listeners.forEach((listener) => listener(items));
 };
 
+/** Заменяет корзину целиком (загрузка при старте) и оповещает подписчиков. */
+export const replaceCart = (next: readonly CartItem[]): void => setItems(next);
+
 // Все изменения корзины собираются через mutate, поэтому оповещение не забыть.
 const mutate =
   (change: (current: readonly CartItem[], productId: number) => CartItem[]) =>
